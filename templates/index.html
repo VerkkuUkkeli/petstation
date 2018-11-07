@@ -1,21 +1,36 @@
 <!-- Template (html file) for the index page (main page) of the application -->
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
+    <head>
     <meta charset="utf-8">
     <title>Pet Station</title>
     <!-- jQuery -->
     <script
-        src="https://code.jquery.com/jquery-3.3.1.min.js"
-        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
     <!-- index page javascript -->
     <script type=text/javascript src="{{url_for('static', filename='js/index.js')}}"></script>
-  </head>
-  <body>
-    <div class="container">
-        <h1>Index Page</h1>
-        <a href="/laser_control" class="btn btn-primary">Laser Control</a>
-    </div>
-  </body>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Index Page</h1>
+            <ul>
+            <li><a href="/laser_control">Laser Control</a></li>
+            <li><a href="/camera">View Camera</a></li>
+            </ul>
+
+            <!-- controls for playing audio files -->
+            <form>
+                <!-- dropdown menu for selecting which audio file to play -->
+                <select name="audio" method="GET" action="/">
+                    {% for audio_fn in audio_files %}
+                        <option value="{{audio_fn}}" SELECTED>{{audio_fn}}</option>"
+                    {% endfor %}
+                </select>
+                <!-- submit form button -->
+                <input type="submit" value="Play Sound">
+            </form>
+        </div>
+    </body>
 </html>

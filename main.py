@@ -1,5 +1,6 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
+from helpers import get_audio_files, play_audio
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -7,7 +8,14 @@ Bootstrap(app)
 # render index page template
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # if query string parameter for audio received, play corresponding audio
+    audio_file = request.args.get('audio')
+    if audio_file is not None:
+        audio_paths = get_audio_files()
+        play_audio(audio_paths[audio_file])
+
+    # return page html as a response
+    return render_template('index.html', audio_files=list(get_audio_files().keys()))
 
 # render laser control page template
 @app.route('/laser_control')
