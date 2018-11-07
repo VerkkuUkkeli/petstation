@@ -1,4 +1,4 @@
-<!-- Template (html file) for the index page (main page) of the application -->
+<!-- Template (html file) for the laser control page -->
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -9,11 +9,13 @@
         src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
-    <!-- index page javascript -->
-    <script type=text/javascript src="{{url_for('static', filename='js/index.js')}}"></script>
+    <!-- laser control page javascript -->
+    <script
+        type=text/javascript
+        src="{{url_for('static', filename='js/laser_control.js')}}"></script>
   </head>
   <body>
-    <h1>Index Page</h1>
-    <a href="/laser_control">Laser Control</a>
+    <h1>Laser Control</h1>
+    <p>Use wasd keys to control laser.</p>
   </body>
 </html>
