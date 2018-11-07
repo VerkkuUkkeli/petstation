@@ -14,6 +14,7 @@ def index():
 def laser_control():
     return render_template('laser_control.html')
 
+
 # key events
 # handlers for GET requests made using XMLHttpRequest from the client
 # each function is responsible for handling the state for the corresponding key
@@ -40,3 +41,9 @@ def d_state(state):
     print("D state:", state)
     # TODO: move laser right if state is 1, stop movement if 0
     return "d"+str(state)
+
+@app.route('/laser<int:state>')
+def laser_state(state):
+    print("Laser state:", state)
+    # TODO: Turn laser pin on if state is 1, turn laser of if 0
+    return "laser"+str(state)
