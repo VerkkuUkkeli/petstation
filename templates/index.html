@@ -14,16 +14,16 @@
     </head>
     <body>
         <div class="container">
-            <h1>Index Page</h1>
+            <a href="/" style="text-decoration:none;color:black"><h1>Index Page</h1></a>
             <ul>
             <li><a href="/laser_control">Laser Control</a></li>
             <li><a href="/camera">View Camera</a></li>
             </ul>
 
             <!-- controls for playing audio files -->
-            <form>
+            <form id="audio-form">
                 <!-- dropdown menu for selecting which audio file to play -->
-                <select name="audio" method="GET" action="/">
+                <select name="audio" id="audio-dropdown" method="GET" action="/">
                     {% for audio_fn in audio_files %}
                         <option value="{{audio_fn}}" SELECTED>{{audio_fn}}</option>"
                     {% endfor %}
