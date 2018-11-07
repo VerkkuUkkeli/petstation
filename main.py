@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request
-from flask_bootstrap import Bootstrap
 from helpers import get_audio_files
 import pygame
 
