@@ -13,15 +13,19 @@ class IOController(threading.Thread):
 
         self.yaw_state = 0.0        # which way to move
         self.pitch_state = 0.0      # which way to move
-        self.servo_speed = 5.0
+        self.servo_speed = 3.0
         self.yaw    = 90.0
         self.pitch  = 90.0
+
+        self.laser_on = False
 
         # setup pins
         self.yaw_pin = 17
         self.pitch_pin = 27
+        self.laser_pin = 22
         io.setup(self.yaw_pin, io.OUT)
         io.setup(self.pitch_pin, io.OUT)
+        io.setup(self.laser_pin, io.OUT)
 
         # setup pwm
         self.yaw_servo = io.PWM(self.yaw_pin, 50)
@@ -33,6 +37,7 @@ class IOController(threading.Thread):
         while True:
             # main loop
             self.update_servo_angles()
+            self.update_laser_state()
             time.sleep(1/60)        # update at 60 Hz
 
     def set_laser_controls(self, yaw, pitch):
@@ -40,6 +45,15 @@ class IOController(threading.Thread):
             self.yaw_state = yaw
         if pitch is not None:
             self.pitch_state = pitch
+
+    def set_laser_state(self, state):
+        self.laser_on = state
+
+    def update_laser_state(self):
+        if self.laser_on is True:
+            io.output(self.laser_pin, io.HIGH)
+        else:
+            io.output(self.laser_pin, io.LOW)
 
     # change laser yaw angle by value
     def update_servo_angles(self):

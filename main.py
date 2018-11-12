@@ -56,7 +56,11 @@ def d_state(state):
 @app.route('/laser<int:state>')
 def laser_state(state):
     print("Laser state:", state)
-    # TODO: Turn laser pin on if state is 1, turn laser of if 0
+    laser_on = False
+    if state == 1:
+        laser_on = True
+       
+    ioCtrl.set_laser_state(laser_on)
     return "laser"+str(state)
 
 # handler for XMLHttpRequests for playing audio files
