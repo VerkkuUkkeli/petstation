@@ -1,9 +1,13 @@
 from flask import Flask, render_template, request
 from helpers import get_audio_files
+import RPi.GPIO as io
 import pygame
+import time
+from io_control import IOController
 
+# global variables
 app = Flask(__name__)
-Bootstrap(app)
+ioCtrl = IOController()
 
 # render index page template
 @app.route('/')
@@ -23,26 +27,30 @@ def laser_control():
 # key events
 @app.route('/w<int:state>')
 def w_state(state):
+    global ioCtrl
     print("W state:", state)
-    # TODO: move laser up if state is 1, stop movement if 0
+    ioCtrl.set_laser_controls(None, state)
     return "w"+str(state)
 
 @app.route('/a<int:state>')
 def a_state(state):
+    global ioCtrl
     print("A state:", state)
-    # TODO: move laser left if state is 1, stop movement if 0
+    ioCtrl.set_laser_controls(state, None)
     return "a"+str(state)
 
 @app.route('/s<int:state>')
 def s_state(state):
+    global ioCtrl
     print("S state:", state)
-    # TODO: move laser down if state is 1, stop movement if 0
+    ioCtrl.set_laser_controls(None, -state)
     return "s"+str(state)
 
 @app.route('/d<int:state>')
 def d_state(state):
+    global ioCtrl
     print("D state:", state)
-    # TODO: move laser right if state is 1, stop movement if 0
+    ioCtrl.set_laser_controls(-state, None)
     return "d"+str(state)
 
 @app.route('/laser<int:state>')
@@ -60,3 +68,7 @@ def play_audio(filename):
     pygame.mixer.music.load(filepath)
     pygame.mixer.music.play()
     return ""
+
+if __name__ == '__main__':
+    ioCtrl.start()
+    app.run(host='0.0.0.0')
