@@ -4,10 +4,14 @@
   <head>
     <meta charset="utf-8">
     <title>Pet Station</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/global.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/camera.css') }}">
   </head>
   <body>
     <a href="/">Index Page</a>
     <h1>Camera feed</h1>
     <img src="{{ url_for('video_feed') }}" width=60%>
+    <p>sample text</p>
+    <p id="camera-test">sample text!!!</p>
   </body>
 </html>

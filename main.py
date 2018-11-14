@@ -26,12 +26,13 @@ def gen(camera):
         frame = camera.get_frame()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-        
+
 # path for the video stream image resource, use as src attribute of html img tag
 @app.route('/video_feed')
 def video_feed():
     return Response(gen(Camera()),
         mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 # render laser control page template
 @app.route('/laser_control')
@@ -77,9 +78,10 @@ def laser_state(state):
     laser_on = False
     if state == 1:
         laser_on = True
-       
+
     ioCtrl.set_laser_state(laser_on)
     return "laser"+str(state)
+
 
 # handler for XMLHttpRequests for playing audio files
 @app.route('/play_audio/<filename>')

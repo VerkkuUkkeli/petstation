@@ -1,0 +1,5 @@
+/* global rules applied to all html pages */
+p {
+    color: red;
+    background: yellow;
+}
