@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 from helpers import get_audio_files
 import RPi.GPIO as io
 import pygame
 import time
+from camera_pi import Camera
 from io_control import IOController
 
 # global variables
@@ -14,6 +15,23 @@ ioCtrl = IOController()
 def index():
     # return page html as a response
     return render_template('index.html', audio_files=list(get_audio_files().keys()))
+
+@app.route('/camera')
+def camera():
+    return render_template('camera.html')
+
+# video streaming generator function
+def gen(camera):
+    while True:
+        frame = camera.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        
+# path for the video stream image resource, use as src attribute of html img tag
+@app.route('/video_feed')
+def video_feed():
+    return Response(gen(Camera()),
+        mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # render laser control page template
 @app.route('/laser_control')
@@ -75,4 +93,4 @@ def play_audio(filename):
 
 if __name__ == '__main__':
     ioCtrl.start()
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', threaded=True)
