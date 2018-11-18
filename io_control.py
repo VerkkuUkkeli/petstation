@@ -30,6 +30,7 @@ class IOController(threading.Thread):
         
         # buttons
         self.button_pins = [16, 20, 21]
+        self.button_led_pins = [26, 19, 13]
         
         # lists for keeping track of the button states,
         # old state kept for detecting rising edges
@@ -39,11 +40,15 @@ class IOController(threading.Thread):
         # list of button handlers, when a button is pressed
         # the corresponding handler function is called
         self.button_handlers = \
-            [self.default_button_handler,
-             self.default_button_handler,
-             self.default_button_handler]
+            [self.led_button_handler,
+             self.led_button_handler,
+             self.led_button_handler]
+        
+        # set pin modes
         for pin in self.button_pins:
             io.setup(pin, io.IN)
+        for pin in self.button_led_pins:
+            io.setup(pin, io.OUT)
         """ stop pin setup """
 
 
@@ -61,9 +66,12 @@ class IOController(threading.Thread):
 
     def handle_buttons(self):
         for i in range(len(self.button_pins)):
-            if self.button_states[i] == 1 and self.button_old_states[i] == 0:
+            if self.button_states[i] == 1 and self.button_old_states[i] == 0: # rising edge
+                self.button_handlers[i](i)  # call handler associated with the button with an argument i
+            if self.button_states[i] == 0 and self.button_old_states[i] == 1: # falling edge
                 self.button_handlers[i](i)  # call handler associated with the button with an argument i
 
+    # run thread
     def run(self):
         while True:
             # main loop
@@ -74,6 +82,11 @@ class IOController(threading.Thread):
             self.handle_buttons()
             
             time.sleep(1/60)        # update at 60 Hz
+
+    # turn on led when button is pressed
+    def led_button_handler(self, number):
+        # print("Setting pin {:d} as {:d}".format(self.button_led_pins[number], self.button_states[number]))
+        io.output(self.button_led_pins[number], self.button_states[number])
 
     # print which button was pressed
     def default_button_handler(self, number):
