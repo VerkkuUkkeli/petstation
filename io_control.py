@@ -19,13 +19,33 @@ class IOController(threading.Thread):
 
         self.laser_on = False
 
-        # setup pins
-        self.yaw_pin = 17
+        """ start pin setup """        
+        # laser turret
+        self.yaw_pin = 22
         self.pitch_pin = 27
-        self.laser_pin = 22
+        self.laser_pin = 17
         io.setup(self.yaw_pin, io.OUT)
         io.setup(self.pitch_pin, io.OUT)
         io.setup(self.laser_pin, io.OUT)
+        
+        # buttons
+        self.button_pins = [16, 20, 21]
+        
+        # lists for keeping track of the button states,
+        # old state kept for detecting rising edges
+        self.button_old_states = [0, 0, 0]
+        self.button_states = [0, 0, 0]
+        
+        # list of button handlers, when a button is pressed
+        # the corresponding handler function is called
+        self.button_handlers = \
+            [self.default_button_handler,
+             self.default_button_handler,
+             self.default_button_handler]
+        for pin in self.button_pins:
+            io.setup(pin, io.IN)
+        """ stop pin setup """
+
 
         # setup pwm
         self.yaw_servo = io.PWM(self.yaw_pin, 50)
@@ -33,12 +53,31 @@ class IOController(threading.Thread):
         self.yaw_servo.start(7.5)
         self.pitch_servo.start(7.5)
 
+    # poll button GPIO values and update button state variables
+    def poll_buttons(self):
+        for i in range(len(self.button_pins)):
+            self.button_old_states[i] = self.button_states[i]  # store old value
+            self.button_states[i] = io.input(self.button_pins[i])  # update current value
+
+    def handle_buttons(self):
+        for i in range(len(self.button_pins)):
+            if self.button_states[i] == 1 and self.button_old_states[i] == 0:
+                self.button_handlers[i](i)  # call handler associated with the button with an argument i
+
     def run(self):
         while True:
             # main loop
             self.update_servo_angles()
             self.update_laser_state()
+            
+            self.poll_buttons()
+            self.handle_buttons()
+            
             time.sleep(1/60)        # update at 60 Hz
+
+    # print which button was pressed
+    def default_button_handler(self, number):
+        print("Button {:d} was pressed.".format(number))
 
     def set_laser_controls(self, yaw, pitch):
         if yaw is not None:
