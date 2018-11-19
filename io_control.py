@@ -85,7 +85,8 @@ class IOController(threading.Thread):
 
     # turn on led when button is pressed
     def led_button_handler(self, number):
-        # print("Setting pin {:d} as {:d}".format(self.button_led_pins[number], self.button_states[number]))
+        print("Button {:d} pressed!".format(number))
+        print("Setting pin {:d} as {:d}".format(self.button_led_pins[number], self.button_states[number]))
         io.output(self.button_led_pins[number], self.button_states[number])
 
     # print which button was pressed
