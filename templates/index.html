@@ -1,44 +1,33 @@
-<!-- Template (html file) for the index page (main page) of the application -->
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Pet Station</title>
-
-    <!-- jQuery -->
-    <script
-    src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-
-    <!-- index page javascript -->
-    <script type=text/javascript src="{{url_for('static', filename='js/index.js')}}"></script>
-
-    <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/global.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/index.css') }}">
-  </head>
-  <body>
-    <a href="/" style="text-decoration:none;color:black"><h1>Index Page</h1></a>
-    <ul>
-      <li><a href="/laser_control">Laser Control</a></li>
-      <li><a href="/camera">View Camera</a></li>
-    </ul>
-
-    <!-- temporary html for css testing -->
-    <p id="index-test">Sample text</p>
-    <p>sample text!</p>
-
-    <!-- controls for playing audio files -->
-    <form id="audio-form">
-      <!-- dropdown menu for selecting which audio file to play -->
-      <select name="audio" id="audio-dropdown" method="GET" action="/">
-        {% for audio_fn in audio_files %}
-          <option value="{{audio_fn}}" SELECTED>{{audio_fn}}</option>"
-        {% endfor %}
-      </select>
-      <!-- submit form button -->
-      <input type="submit" value="Play Sound">
-    </form>
-  </body>
+<html lang="en">
+<head>
+	<link rel="stylesheet" type="text/css" href="static/css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="static/css/grid.css">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="static/css/style.css">
+	<title>The Pet Station</title>
+</head>
+<body>
+	<header>
+		<div class="main-title-text">
+			<h1>The Pet Station</h1>
+			<div class="thaButtons">
+				<a class="buttons" href="laser_control.html">Laser Control</a>
+				<a class="buttons" href="camera.html">View Camera</a>
+			</div>
+			<div class="daForm">
+				<form id="audio-form">
+			      <!-- dropdown menu for selecting which audio file to play -->
+			      <select name="audio" id="audio-dropdown" method="GET" action="/">
+			        {% for audio_fn in audio_files %}
+			          <option value="{{audio_fn}}" SELECTED>{{audio_fn}}</option>"
+			        {% endfor %}
+			      </select>
+			      <!-- submit form button -->
+			      <input class="sound-button" type="submit" value="Play Sound">
+			    </form>
+			</div>
+		</div>
+	</header>
+</body>
 </html>

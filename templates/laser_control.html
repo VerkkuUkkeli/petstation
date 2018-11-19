@@ -1,10 +1,9 @@
 <!-- Template (html file) for the laser control page -->
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <title>Pet Station</title>
-
     <!-- jQuery -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -17,14 +16,22 @@
       src="{{url_for('static', filename='js/laser_control.js')}}"></script>
 
     <!-- css -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/global.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/laser_control.css') }}">
+    <link rel="stylesheet" type="text/css" href="static/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="static/css/grid.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="static/css/style.css">
   </head>
   <body>
-    <a href="/">Index Page</a>
-    <h1>Laser Control</h1>
-    <p>Use wasd keys to control laser.</p>
-    <p>Hold down enter to keep the laser on.</p>
-    <p id="laser-control-test">sample text</p>
+    <header>
+        <h1>Laser Control</h1>
+        <div class="row, laser-text">
+          <p>Use wasd keys to control laser.</p>
+          <p>Hold down enter to keep the laser on.</p>
+        </div>
+          <div class="thaButtons">
+              <a class="buttons" href="index.html">Home</a>
+              <a class="buttons" href="camera.html">Camera</a>
+          </div>
+      </header>
   </body>
 </html>
