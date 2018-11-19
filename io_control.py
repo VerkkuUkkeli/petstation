@@ -27,6 +27,11 @@ class IOController(threading.Thread):
         io.setup(self.yaw_pin, io.OUT)
         io.setup(self.pitch_pin, io.OUT)
         io.setup(self.laser_pin, io.OUT)
+
+        # fan
+        self.fan_pin = 6
+        io.setup(self.fan_pin, io.OUT)
+        io.output(self.fan_pin, io.HIGH)
         
         # buttons
         self.button_pins = [16, 20, 21]
@@ -40,7 +45,7 @@ class IOController(threading.Thread):
         # list of button handlers, when a button is pressed
         # the corresponding handler function is called
         self.button_handlers = \
-            [self.led_button_handler,
+            [self.waggle_mouse_handler,
              self.led_button_handler,
              self.led_button_handler]
         
@@ -51,12 +56,58 @@ class IOController(threading.Thread):
             io.setup(pin, io.OUT)
         """ stop pin setup """
 
+        # mouse waggler
+        self.mouse_pin = 12
+
+        self.mouse_rest = 9             # servo resting angle
+        self.mouse_low = 6              # servo lower limit
+        self.mouse_high = 12            # servo upper limit
+        self.mouse_delay = 1000         # time between mouse movements
+        self.mouse_last_millis = None   # time of last animation update
+        self.mouse_on = False           # is the animation playing?
+
+        # mouse servo animation and current animation frame
+        self.mouse_states = [self.mouse_low, self.mouse_high, self.mouse_low, self.mouse_high]
+        self.mouse_frame = 0
+
+        # set pwm to first frame of the animation
+        io.setup(self.mouse_pin, io.OUT)
+        self.mouse_servo = io.PWM(self.mouse_pin, 50)
+        self.mouse_servo.start(self.mouse_states[0])
 
         # setup pwm
         self.yaw_servo = io.PWM(self.yaw_pin, 50)
         self.pitch_servo = io.PWM(self.pitch_pin, 50)
         self.yaw_servo.start(7.5)
         self.pitch_servo.start(7.5)
+
+    # turn on mouse animation
+    def waggle_mouse(self):
+        self.mouse_on = True
+        self.mouse_frame = 0
+        self.mouse_t0 = int(round(time.time() * 1000))
+        self.mouse_last_millis = int(round(time.time() * 1000))
+
+    # update mouse servo position and animation state
+    def update_mouse_position(self):
+        # set servo to angle corresponding to the current animation frame
+        if self.mouse_on:
+            current_millis = int(round(time.time() * 1000))
+            # update mouse animation at specified interval
+            if (current_millis - self.mouse_last_millis) > self.mouse_delay:
+                self.mouse_last_millis = current_millis
+                self.mouse_frame += 1
+                # stop executing animation when all frames have been played back
+                if self.mouse_frame > len(self.mouse_states) - 1:
+                    self.mouse_on = False
+                    return
+
+                # set current frame
+                self.mouse_servo.ChangeDutyCycle(self.mouse_states[self.mouse_frame])
+        else:
+            # reset servo to rest position when animation is not playing
+            self.mouse_servo.ChangeDutyCycle(self.mouse_rest)
+
 
     # poll button GPIO values and update button state variables
     def poll_buttons(self):
@@ -71,6 +122,7 @@ class IOController(threading.Thread):
             if self.button_states[i] == 0 and self.button_old_states[i] == 1: # falling edge
                 self.button_handlers[i](i)  # call handler associated with the button with an argument i
 
+
     # run thread
     def run(self):
         while True:
@@ -80,6 +132,8 @@ class IOController(threading.Thread):
             
             self.poll_buttons()
             self.handle_buttons()
+
+            self.update_mouse_position()
             
             time.sleep(1/60)        # update at 60 Hz
 
@@ -92,6 +146,11 @@ class IOController(threading.Thread):
     # print which button was pressed
     def default_button_handler(self, number):
         print("Button {:d} was pressed.".format(number))
+
+    def waggle_mouse_handler(self, number):
+        io.output(self.button_led_pins[number], self.button_states[number])
+        if self.button_states[number] == io.HIGH:
+            self.waggle_mouse()
 
     def set_laser_controls(self, yaw, pitch):
         if yaw is not None:
@@ -128,5 +187,4 @@ class IOController(threading.Thread):
 
         self.yaw_servo.ChangeDutyCycle(yaw_duty)
         self.pitch_servo.ChangeDutyCycle(pitch_duty)
-
 
