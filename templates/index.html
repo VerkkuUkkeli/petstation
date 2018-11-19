@@ -1,19 +1,32 @@
+<!-- Template (html file) for the index page (main page) of the application -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
+	<meta charset="utf-8">
+    	<title>Pet Station</title>
+
+	<!-- jQuery -->
+    	<script
+    		src="https://code.jquery.com/jquery-3.3.1.min.js"
+    		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    		crossorigin="anonymous"></script>
+
+    	<!-- index page javascript -->
+    	<script type=text/javascript src="{{url_for('static', filename='js/index.js')}}"></script>
+
 	<link rel="stylesheet" type="text/css" href="static/css/normalize.css">
 	<link rel="stylesheet" type="text/css" href="static/css/grid.css">
 	<link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="static/css/style.css">
-	<title>The Pet Station</title>
+
 </head>
 <body>
 	<header>
 		<div class="main-title-text">
 			<h1>The Pet Station</h1>
 			<div class="thaButtons">
-				<a class="buttons" href="laser_control.html">Laser Control</a>
-				<a class="buttons" href="camera.html">View Camera</a>
+				<a class="buttons" href="/laser_control">Laser Control</a>
+				<a class="buttons" href="/camera">View Camera</a>
 			</div>
 			<div class="daForm">
 				<form id="audio-form">
