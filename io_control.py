@@ -59,9 +59,9 @@ class IOController(threading.Thread):
         # mouse waggler
         self.mouse_pin = 12
 
-        self.mouse_rest = 9             # servo resting angle
-        self.mouse_low = 6              # servo lower limit
-        self.mouse_high = 12            # servo upper limit
+        self.mouse_rest = 8             # servo resting angle
+        self.mouse_low = 7              # servo lower limit
+        self.mouse_high = 10            # servo upper limit
         self.mouse_delay = 1000         # time between mouse movements
         self.mouse_last_millis = None   # time of last animation update
         self.mouse_on = False           # is the animation playing?
